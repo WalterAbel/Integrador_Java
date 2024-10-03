@@ -1,5 +1,9 @@
 package com.ObraSocial.Repositorio;
 
-public interface EspecialidadRepositorio {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.ObraSocial.Modelo.Especialidad;
+
+public interface EspecialidadRepositorio extends JpaRepository<Especialidad, Long> {
 
 }
