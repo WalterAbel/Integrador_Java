@@ -43,6 +43,7 @@ public class TurnosControlador {
 		return ResponseEntity.status(HttpStatus.CREATED).body(savedTurno);
 	}
 
+	@CrossOrigin
 	@PutMapping("/{id}")
 	public ResponseEntity<Turnos> updateTurno(@PathVariable Long id, @RequestBody Turnos updatedTurno) {
 		Turnos turno = turnosService.updateTurno(id, updatedTurno);

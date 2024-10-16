@@ -9,6 +9,8 @@ import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "Pacientes")
 public class Paciente {
@@ -29,7 +31,8 @@ public class Paciente {
 
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate fechaNacimiento;
-
+	
+	@JsonIgnore
 	@OneToMany(mappedBy = "paciente", cascade = CascadeType.ALL)
 	private List<Turnos> turnos = new ArrayList<>();
 

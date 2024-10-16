@@ -3,6 +3,8 @@ package com.ObraSocial.Entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,7 +26,8 @@ public class Especialidad {
 	@NotBlank(message = "El nombre de la especialidad es obligatorio")
 	@Column(unique = true, nullable = false)
 	private String nombre;
-
+	
+	@JsonIgnore
 	@OneToMany(mappedBy = "especialidad", cascade = CascadeType.MERGE)
 	private List<Medicos> medicos = new ArrayList<>();
 
