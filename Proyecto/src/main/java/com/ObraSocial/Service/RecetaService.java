@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.ObraSocial.Entity.Receta;
 import com.ObraSocial.Entity.Turnos;
+import com.ObraSocial.Exceptions.RecetaNotFoundException;
 import com.ObraSocial.Repository.RecetaRepositorio;
 import com.ObraSocial.Repository.TurnosRepositorio;
 
@@ -33,10 +34,11 @@ public class RecetaService {
 				if (turnos.getPaciente().getId().equals(idPaciente)) {
 					return receta;
 				}
-				return null;
+				throw new RecetaNotFoundException(
+						"No se encontró la receta con ID " + idReceta + " para el paciente con ID " + idPaciente);
 			}
-			return null;
+			throw new RecetaNotFoundException("No se encontró el turno con ID " + Idturno);
 		}
-		return null;
+		throw new RecetaNotFoundException("No se encontró la receta con ID " + idReceta);
 	}
 }

@@ -1,12 +1,12 @@
 package com.ObraSocial.Service;
 
 import java.util.List;
-import java.util.Optional;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ObraSocial.Entity.Medicos;
 import com.ObraSocial.Entity.Turnos;
+import com.ObraSocial.Exceptions.ResourceNotFoundException;
 import com.ObraSocial.Repository.MedicosRepositorio;
 import com.ObraSocial.Repository.TurnosRepositorio;
 
@@ -23,7 +23,7 @@ public class TurnoService {
 	public List<Turnos> getAllTurnos() {
 		return (List<Turnos>) turnoRepository.findAll();
 	}
-	
+
 	@Transactional
 	public Turnos saveTurnos(Turnos turnos) {
 		return turnoRepository.save(turnos);
@@ -31,36 +31,33 @@ public class TurnoService {
 
 	@Transactional
 	public Turnos updateTurno(Long id, Turnos updatedTurno) {
-		Optional<Turnos> turnOptional = turnoRepository.findById(id);
+		Turnos turno = turnoRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Turno no encontrado con id: " + id));
 
-		if (turnOptional.isPresent()) {
-			Turnos turno = turnOptional.get();
-
-			if (updatedTurno.getFechaHora() != null) {
-				turno.setFechaHora(updatedTurno.getFechaHora());
-			}
-
-			if (updatedTurno.getMedico() != null && updatedTurno.getMedico().getId() != null) {
-				Optional<Medicos> medicoOpt = medicoRepository.findById(updatedTurno.getMedico().getId());
-				if (medicoOpt.isPresent()) {
-					turno.setMedico(medicoOpt.get());
-				}
-			}
-			if (updatedTurno.getMotivoConsulta() != null) {
-				turno.setMotivoConsulta(updatedTurno.getMotivoConsulta());
-			}
-			return turnoRepository.save(turno);
-		} else {
-			return null;
+		if (updatedTurno.getFechaHora() != null) {
+			turno.setFechaHora(updatedTurno.getFechaHora());
 		}
+
+		if (updatedTurno.getMedico() != null && updatedTurno.getMedico().getId() != null) {
+			Medicos medico = medicoRepository.findById(updatedTurno.getMedico().getId())
+					.orElseThrow(() -> new ResourceNotFoundException(
+							"Medico no encontrado con id: " + updatedTurno.getMedico().getId()));
+			turno.setMedico(medico);
+		}
+
+		if (updatedTurno.getMotivoConsulta() != null) {
+			turno.setMotivoConsulta(updatedTurno.getMotivoConsulta());
+		}
+
+		return turnoRepository.save(turno);
 	}
 
 	@Transactional
-	public boolean deleteTurno(Long id) {
-		if (turnoRepository.existsById(id)) {
-			turnoRepository.deleteById(id);
-			return true;
+	public void deleteTurno(Long id) {
+		if (!turnoRepository.existsById(id)) {
+			throw new ResourceNotFoundException("Turno no encontrado con id: " + id);
 		}
-		return false;
+		turnoRepository.deleteById(id);
 	}
+
 }

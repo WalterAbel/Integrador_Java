@@ -1,9 +1,7 @@
 package com.ObraSocial.Controller;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,8 +13,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.ObraSocial.Entity.*;
+import com.ObraSocial.Exceptions.ResourceNotFoundException;
 import com.ObraSocial.Service.TurnoService;
 
 @RestController
@@ -28,10 +26,10 @@ public class TurnosControlador {
 
 	@CrossOrigin
 	@GetMapping
-	public ResponseEntity<List<Turnos>> getAllTurnos() {
+	public ResponseEntity<?> getAllTurnos() {
 		List<Turnos> turnos = this.turnosService.getAllTurnos();
 		if (turnos.isEmpty()) {
-			return ResponseEntity.noContent().build();
+			return ResponseEntity.ok("No hay turnos registrados");
 		}
 		return ResponseEntity.ok(turnos);
 	}
@@ -47,19 +45,12 @@ public class TurnosControlador {
 	@PutMapping("/{id}")
 	public ResponseEntity<Turnos> updateTurno(@PathVariable Long id, @RequestBody Turnos updatedTurno) {
 		Turnos turno = turnosService.updateTurno(id, updatedTurno);
-		if (turno == null) {
-			return ResponseEntity.notFound().build();
-		}
 		return ResponseEntity.ok(turno);
 	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteTurno(@PathVariable Long id) {
-		boolean isDeleted = turnosService.deleteTurno(id);
-		if (isDeleted) {
-			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-		} else {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Turno no encontrado");
-		}
+		turnosService.deleteTurno(id);
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 }
