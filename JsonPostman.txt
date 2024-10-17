@@ -1,0 +1,35 @@
+CREAR TURNO
+POST: http://localhost:8080/turnos
+
+{
+        "paciente": {
+            "id": "2"
+        },
+        "medico": {
+            "id": 2
+        },
+        "fechaHora": "2024-10-16 10:00:00",
+        "motivoConsulta": "Examenes de laboratorio"
+    }
+
+ACTUALIZAR TURNO
+PUT: http://localhost:8080/{id}
+
+{
+  "paciente": { "id": 1 },
+  "medico": { "id": 2 },
+  "fechaHora": "2024-10-16 12:00:00",
+  "motivoConsulta": "Consulta de chequeo general"
+}
+
+VISUALIZAR TURNOS
+GET: http://localhost:8080
+
+VISUALIZAR ESPECIALISTAS
+GET: http://localhost:8080/especialistas
+
+ELIMINAR TURNOS
+DELETE: http://localhost:8080/{id}
+
+OBTENER RECETA SI PERTENECE A PACIENTE
+GET: http://localhost:8080/{idPaciente}/{idReceta}
