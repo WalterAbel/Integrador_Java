@@ -24,11 +24,6 @@ public class TurnoService {
 	}
 
 	@Transactional
-	public Turnos saveTurnos(Turnos turnos) {
-		return turnoRepository.save(turnos);
-	}
-
-	@Transactional
 	public TurnoDTO saveTurno(TurnoDTO turnoDTO) {
 		Turnos turno = TurnoMapper.INSTANCE.turnoDTOToTurno(turnoDTO);
 		Turnos savedTurno = turnoRepository.save(turno);
