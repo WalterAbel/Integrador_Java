@@ -1,0 +1,42 @@
+use obra_social; --Ya había creado la BBDD
+
+CREATE TABLE Especialidades (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL UNIQUE  -- Nombre de la especialidad (único)
+);
+
+CREATE TABLE Medicos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    especialidad_id INT NOT NULL,
+    ubicacion VARCHAR(255),
+    horarios TEXT,
+    FOREIGN KEY (especialidad_id) REFERENCES Especialidades(id) ON DELETE RESTRICT
+);
+
+CREATE TABLE Pacientes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    telefono VARCHAR(15),
+    direccion VARCHAR(255),
+    fecha_nacimiento DATE
+);
+
+CREATE TABLE Turnos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    paciente_id INT NOT NULL,
+    medico_id INT NOT NULL,
+    fecha_hora DATETIME NOT NULL,
+    motivo_consulta VARCHAR(255),
+    FOREIGN KEY (paciente_id) REFERENCES Pacientes(id) ON DELETE CASCADE,
+    FOREIGN KEY (medico_id) REFERENCES Medicos(id) ON DELETE CASCADE
+);
+
+CREATE TABLE Recetas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    turno_id INT NOT NULL,
+    fecha_emision DATE NOT NULL,
+    detalles TEXT,
+    FOREIGN KEY (turno_id) REFERENCES Turnos(id) ON DELETE CASCADE
+);
