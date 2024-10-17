@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.ObraSocial.Entity.*;
-import com.ObraSocial.Exceptions.ResourceNotFoundException;
 import com.ObraSocial.Service.TurnoService;
 
 @RestController
@@ -49,8 +48,8 @@ public class TurnosControlador {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> deleteTurno(@PathVariable Long id) {
-		turnosService.deleteTurno(id);
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	public ResponseEntity<Turnos> deleteTurno(@PathVariable Long id) {
+	    Turnos deletedTurno = turnosService.deleteTurno(id);
+	    return ResponseEntity.ok(deletedTurno);
 	}
 }

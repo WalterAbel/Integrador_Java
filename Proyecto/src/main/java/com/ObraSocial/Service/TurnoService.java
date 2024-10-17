@@ -53,11 +53,11 @@ public class TurnoService {
 	}
 
 	@Transactional
-	public void deleteTurno(Long id) {
-		if (!turnoRepository.existsById(id)) {
-			throw new ResourceNotFoundException("Turno no encontrado con id: " + id);
-		}
-		turnoRepository.deleteById(id);
+	public Turnos deleteTurno(Long id) {
+	    Turnos turno = turnoRepository.findById(id)
+	            .orElseThrow(() -> new ResourceNotFoundException("Turno no encontrado con id: " + id));
+	    turnoRepository.deleteById(id);
+	    return turno;
 	}
 
 }
