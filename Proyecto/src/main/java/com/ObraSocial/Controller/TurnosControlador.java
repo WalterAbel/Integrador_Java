@@ -1,6 +1,7 @@
 package com.ObraSocial.Controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.ObraSocial.Service.TurnoService;
 import com.ObraSocial.DTO.TurnoDTO;
+import com.ObraSocial.DTO.TurnoMapper;
+import com.ObraSocial.Entity.Turnos;
 
 @RestController
 @RequestMapping
@@ -28,28 +31,32 @@ public class TurnosControlador {
 	@CrossOrigin
 	@GetMapping
 	public ResponseEntity<List<TurnoDTO>> getAllTurnos() {
-		List<TurnoDTO> turnos = turnosService.getAllTurnos();
+		List<TurnoDTO> turnos = turnosService.getAllTurnos().stream().map(TurnoMapper.INSTANCE::turnoToTurnoDTO)
+				.collect(Collectors.toList());
 		if (turnos.isEmpty()) {
 			return ResponseEntity.noContent().build();
 		}
-		return ResponseEntity.ok(turnos);
 	}
 
 	@CrossOrigin
-	@PostMapping
-	public ResponseEntity<TurnoDTO> createTurno(@RequestBody TurnoDTO turnoDTO) {
-		TurnoDTO savedTurnoDTO = turnosService.saveTurno(turnoDTO);
+	@PostMapping("/turnos")
+	public ResponseEntity<TurnoDTO> crateTurnos(@RequestBody TurnoDTO turnoDTO) {
+		Turnos turno = TurnoMapper.INSTANCE.turnoDTOToTurno(turnoDTO);
+		Turnos savedTurno = turnosService.saveTurno(turno);
+		TurnoDTO savedTurnoDTO = TurnoMapper.INSTANCE.turnoToTurnoDTO(savedTurno);
 		return ResponseEntity.status(HttpStatus.CREATED).body(savedTurnoDTO);
 	}
 
 	@CrossOrigin
 	@PutMapping("/{id}")
 	public ResponseEntity<TurnoDTO> updateTurno(@PathVariable Long id, @RequestBody TurnoDTO updatedTurnoDTO) {
-		TurnoDTO updatedTurno = turnosService.updateTurno(id, updatedTurnoDTO);
-		if (updatedTurno == null) {
+		Turnos updatedTurno = TurnoMapper.INSTANCE.turnoDTOToTurno(updatedTurnoDTO);
+		Turnos turno = turnosService.updateTurno(id, updatedTurno);
+		if (turno == null) {
 			return ResponseEntity.notFound().build();
 		}
-		return ResponseEntity.ok(updatedTurno);
+		TurnoDTO turnoDTO = TurnoMapper.INSTANCE.turnoToTurnoDTO(turno);
+		return ResponseEntity.ok(turnoDTO);
 	}
 
 	@DeleteMapping("/{id}")

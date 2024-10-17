@@ -17,7 +17,7 @@ public class TurnoService {
 	@Autowired
 	private TurnosRepositorio turnoRepository;
 
-	@Transactional(readOnly = true)
+
 	public List<TurnoDTO> getAllTurnos() {
 		return turnoRepository.findAll().stream().map(TurnoMapper.INSTANCE::turnoToTurnoDTO)
 				.collect(Collectors.toList());
